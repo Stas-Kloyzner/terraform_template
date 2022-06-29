@@ -4,17 +4,26 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
+- master
 
 pool:
   name: w7pool
-  vmImage: ubuntu-latest
 
-steps:
-- script: terraform init
-  displayName: 'Run a one-line script'
+stages:
+- stage: install
+  displayName: install terraform
+  
+  jobs:
+  - job: install
+    displayName: install terraform
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    steps:
+    - task: TerraformInstaller@0
+      inputs:
+        terraformVersion: 'latest'
+
+
+# - script: |
+#     echo Add other tasks to build, test, and deploy your project.
+#     echo See https://aka.ms/yaml
+#   displayName: 'Run a multi-line script'
