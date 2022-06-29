@@ -24,13 +24,17 @@ stages:
       displayName: install terraform
     
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
-      displayName: 'Terraform : init'
+      displayName: 'Terraform backend'
       inputs:
         backendServiceArm: 'Azure Pass — спонсорское предложение (652d0bc1-0a52-4208-aba4-081164348a87)'
         backendAzureRmResourceGroupName: storage
         backendAzureRmStorageAccountName: w7tfstate
         backendAzureRmContainerName: tfstate
         backendAzureRmKey: tf/terraform.tfstate
+      
+    
+  
+#staging
     - task: CmdLine@2
       inputs:
         script: 'terraform workspace new staging'
@@ -38,6 +42,20 @@ stages:
       inputs:
         script: 'terraform plan -var environment=staging'
         
+      
+    
+# production
+    - task: CmdLine@2
+      inputs:
+        script: 'terraform workspace new production'
+    - task: CmdLine@2
+      inputs:
+        script: 'terraform plan -var environment=production'
+        
+      
+    
+  
+#publishing
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Pipeline.Workspace)/s'
