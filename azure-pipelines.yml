@@ -31,6 +31,12 @@ stages:
         backendAzureRmStorageAccountName: w7tfstate
         backendAzureRmContainerName: tfstate
         backendAzureRmKey: tf/terraform.tfstate
+    - task: CmdLine@2
+      inputs:
+        script: 'terraform workspace new staging'
+    - task: CmdLine@2
+      inputs:
+        script: 'terraform plan -var environment=staging'
         
     - task: PublishBuildArtifacts@1
       inputs:
