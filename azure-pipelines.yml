@@ -38,16 +38,28 @@ stages:
     - task: CmdLine@2
       inputs:
         script: 'terraform workspace new staging'
+      continueOnError: true
+    
+    - task: CmdLine@2
+      inputs:
+        script: 'terraform workspace select staging'
+      continueOnError: true
     - task: CmdLine@2
       inputs:
         script: 'terraform plan -var environment=staging'
-        
+
       
-    
 # production
     - task: CmdLine@2
       inputs:
         script: 'terraform workspace new production'
+      continueOnError: true
+    
+    - task: CmdLine@2
+      inputs:
+        script: 'terraform workspace select production'
+      continueOnError: true
+
     - task: CmdLine@2
       inputs:
         script: 'terraform plan -var environment=production'
