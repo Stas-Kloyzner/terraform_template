@@ -21,6 +21,7 @@ stages:
     - task: TerraformInstaller@0
       inputs:
         terraformVersion: 'latest'
+      displayName: install terraform
     
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
       displayName: 'Terraform : init'
@@ -36,6 +37,7 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
+        
 # - script: |
 #     echo Add other tasks to build, test, and deploy your project.
 #     echo See https://aka.ms/yaml
