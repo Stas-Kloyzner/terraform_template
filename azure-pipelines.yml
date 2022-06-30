@@ -23,15 +23,17 @@ stages:
         terraformVersion: 'latest'
       displayName: install terraform
     
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
-      displayName: 'Terraform backend'
+    # - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+    #   displayName: 'Terraform backend'
+    #   inputs:
+    #     backendServiceArm: 'Azure Pass — спонсорское предложение (652d0bc1-0a52-4208-aba4-081164348a87)'
+    #     backendAzureRmResourceGroupName: storage
+    #     backendAzureRmStorageAccountName: w7tfstate
+    #     backendAzureRmContainerName: tfstate
+    #     backendAzureRmKey: tf/terraform.tfstate
+    - task: TerraformCLI@0
       inputs:
-        backendServiceArm: 'Azure Pass — спонсорское предложение (652d0bc1-0a52-4208-aba4-081164348a87)'
-        backendAzureRmResourceGroupName: storage
-        backendAzureRmStorageAccountName: w7tfstate
-        backendAzureRmContainerName: tfstate
-        backendAzureRmKey: tf/terraform.tfstate
-      
+        command: 'init'
     
   
 #staging
