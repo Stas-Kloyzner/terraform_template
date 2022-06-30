@@ -31,11 +31,14 @@ stages:
     #     backendAzureRmStorageAccountName: w7tfstate
     #     backendAzureRmContainerName: tfstate
     #     backendAzureRmKey: tf/terraform.tfstate
-    - task: TerraformCLI@0
+
+    - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
+      displayName: 'terraform init'
       inputs:
-        command: 'init'
-        allowTelemetryCollection: true
-      displayName:  terraform init
+        command: init
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+        backendServiceArm: 'Azure Pass — спонсорское предложение (652d0bc1-0a52-4208-aba4-081164348a87)'
+        allowTelemetryCollection: false
     
   
 #staging
