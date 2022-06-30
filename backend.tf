@@ -7,11 +7,11 @@ terraform {
     }
   }
 
-  backend "azurerm" {
-    resource_group_name = "storage"
-    storage_account_name = "w5tfstate"
-    container_name = "tfstate"
-  }
+#   backend "azurerm" {
+#     resource_group_name = "storage"
+#     storage_account_name = "w5tfstate"
+#     container_name = "tfstate"
+#   }
 
   required_version = ">= 1.1.0"
 }
