@@ -34,6 +34,8 @@ stages:
     - task: TerraformCLI@0
       inputs:
         command: 'init'
+        allowTelemetryCollection: true
+      displayName:  terraform init
     
   
 #staging
