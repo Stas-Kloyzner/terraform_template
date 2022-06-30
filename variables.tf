@@ -3,7 +3,7 @@
 #rg variables
 variable "environment" {
   description = "the name of the workspace, resource group and all components will be named based on it"
-  default     = "staging"
+  default     = "testrg"
 }
 variable "location" {
   description = "location of the resource group"
