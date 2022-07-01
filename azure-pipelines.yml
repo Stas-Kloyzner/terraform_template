@@ -33,6 +33,7 @@ stages:
     variables:
     - group: staging_vars
     - group: azure_credentials
+    dependsOn: install
     displayName: staging_init_and_plan
 
     steps:
@@ -54,6 +55,7 @@ stages:
     variables:
     - group: production_vars
     - group: azure_credentials
+    dependsOn: staging_init_and_plan
     displayName: production_init_and_plan
 
     steps:
@@ -72,6 +74,7 @@ stages:
       displayName: production_init_and_plan
 
   - job: package_and_export_artifct
+    dependsOn: production_init_and_plan
     displayName: package_and_export_artifct
   
     steps:
