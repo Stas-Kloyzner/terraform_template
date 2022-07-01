@@ -6,8 +6,8 @@ pool:
   name: w7pool
 
 stages:
-# - stage: install
-#   displayName: install terraform
+- stage: install
+  displayName: install terraform
   
 #   jobs:
 #   - job: install
