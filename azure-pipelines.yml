@@ -13,7 +13,7 @@ stages:
   - job: install
     displayName: install terraform and prerequisites
 
-#     steps:
+    # steps:
     
 #     - task: CmdLine@2
 #       inputs:
@@ -36,6 +36,7 @@ stages:
     displayName: staging_init_and_plan
 
     steps:
+    - checkout: none
     - task: CmdLine@2
       inputs:
         script: |
@@ -56,6 +57,7 @@ stages:
     displayName: production_init_and_plan
 
     steps:
+    - checkout: none
     - task: CmdLine@2
       inputs:
         script: |
@@ -73,6 +75,7 @@ stages:
     displayName: package_and_export_artifct
   
     steps:
+    - checkout: none
     - task: CmdLine@2
       inputs:
         script: 'sudo apt-get -y install zip'
