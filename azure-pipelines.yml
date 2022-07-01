@@ -7,7 +7,6 @@ pool:
 
 stages:
 - stage: Terraform_CI
-  dependsOn: install
   displayName: Terraform_CI
   
   jobs:
