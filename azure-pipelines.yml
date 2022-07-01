@@ -33,7 +33,7 @@ stages:
   variables:
   - group: staging_vars
   - group: azure_credentials
-  dependsOn: install
+  # dependsOn: install
   displayName: terraform init and plan
   
   jobs:
