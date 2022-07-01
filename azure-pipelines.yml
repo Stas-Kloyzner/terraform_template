@@ -51,26 +51,27 @@ stages:
     #     workingDirectory: '$(agent.builddirectory)/s'
     #   displayName: 'export az credentials'
       
-    - task: CmdLine@2
-      inputs:
-        script: |
-          az login -u $(login) -p $(password)
-          terraform init
-          terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
-        workingDirectory: '$(agent.builddirectory)/s'
-      displayName: 'init and plan'
-
-    # - task: AzureCLI@2
-    #   displayName: Azure CLI terraform staging
+    # - task: CmdLine@2
     #   inputs:
-    #     azureSubscription: azure_pass
-    #     scriptType: bash
-    #     scriptLocation: inlineScript
-    #     inlineScript: |
-        #   terraform workspace select staging || terraform workspace new staging
-        #   terraform init
-        #   terraform plan -out=plan.file -var 'environment=$rg' -var 'vmss_admin_username=$user' -var 'vmss_admin_password=$pass'
-        # workingDirectory: '$(agent.builddirectory)/s'
+    #     script: |
+    #       az login -u $(login) -p $(password)
+    #       terraform init
+    #       terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
+              # terraform workspace select staging || terraform workspace new staging
+          # terraform init
+          # terraform plan -out=plan.file -var 'environment=$rg' -var 'vmss_admin_username=$user' -var 'vmss_admin_password=$pass'
+    #     workingDirectory: '$(agent.builddirectory)/s'
+    #   displayName: 'init and plan'
+
+    - task: AzureCLI@2
+      displayName: Azure CLI terraform staging
+      inputs:
+        azureSubscription: azure_pass
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az login -u $(login) -p $(password)
+        workingDirectory: '$(agent.builddirectory)/s'
       
     # - task: CmdLine@2
     #   inputs:
