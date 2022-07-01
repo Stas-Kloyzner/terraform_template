@@ -41,19 +41,20 @@ stages:
     displayName: terraform terraform init and plan
 
     steps:
-    - task: CmdLine@2
-      inputs:
-        script: |
-          export ARM_CLIENT_ID=1
-          export ARM_CLIENT_SECRET=2
-          export ARM_TENANT_ID=3
-          export ARM_SUBSCRIPTION_ID=$(subscription_id)
-        workingDirectory: '$(agent.builddirectory)/s'
-      displayName: 'export az credentials'
+    # - task: CmdLine@2
+    #   inputs:
+    #     script: |
+    #       export ARM_CLIENT_ID=1
+    #       export ARM_CLIENT_SECRET=2
+    #       export ARM_TENANT_ID=3
+    #       export ARM_SUBSCRIPTION_ID=$(subscription_id)
+    #     workingDirectory: '$(agent.builddirectory)/s'
+    #   displayName: 'export az credentials'
       
     - task: CmdLine@2
       inputs:
         script: |
+          az login --service-principal -u $(client_id) -p $(secret) --tenant $(tenant)
           terraform init
           terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
         workingDirectory: '$(agent.builddirectory)/s'
