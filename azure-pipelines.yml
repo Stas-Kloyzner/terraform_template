@@ -54,9 +54,9 @@ stages:
     - task: CmdLine@2
       inputs:
         script: |
-          az login --service-principal -u $(client_id) -p $(secret) --tenant $(tenant)
-          terraform init
-          terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
+          az login --user -u $(client_id) -p $(secret) --tenant $(tenant)
+          # terraform init
+          # terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: 'init and plan'
 
