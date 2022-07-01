@@ -48,6 +48,8 @@ stages:
           export ARM_CLIENT_SECRET=$(secret)
           export ARM_TENANT_ID=$(tenant)
           export ARM_SUBSCRIPTION_ID=$(subscription_id)
+          terraform init
+          terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: 'export az credentials'
     - task: CmdLine@2
@@ -56,7 +58,7 @@ stages:
           terraform init
           terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
         workingDirectory: '$(agent.builddirectory)/s'
-      displayName: 'export az credentials'
+      displayName: 'no export az credentials'
       
     
     # - task: CmdLine@2
