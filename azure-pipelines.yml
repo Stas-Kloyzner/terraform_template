@@ -6,8 +6,9 @@ pool:
   name: w7pool
 
 stages:
-- stage: install
-  displayName: install terraform
+- stage: Terraform_CI
+  dependsOn: install
+  displayName: Terraform_CI
   
   jobs:
   - job: install
@@ -28,12 +29,7 @@ stages:
 #           sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 #           sudo apt-get update && sudo apt-get install terraform
 #       displayName: 'install terraform'
-    
-- stage: Terraform_CI
-  dependsOn: install
-  displayName: Terraform_CI
-  
-  jobs:
+
   - job: staging_init_and_plan
     variables:
     - group: staging_vars
