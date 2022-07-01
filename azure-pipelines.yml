@@ -49,7 +49,7 @@ stages:
           export ARM_TENANT_ID=$(tenant)
           export ARM_SUBSCRIPTION_ID=$(subscription_id)
           terraform init
-          terraform workspace select staging || terraform workspace new staging
+          terraform workspace select $(rg) || terraform workspace new $(rg)
           terraform init
           terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
         workingDirectory: '$(agent.builddirectory)/s'
@@ -75,7 +75,7 @@ stages:
           export ARM_TENANT_ID=$(tenant)
           export ARM_SUBSCRIPTION_ID=$(subscription_id)
           terraform init
-          terraform workspace select staging || terraform workspace new staging
+          terraform workspace select $(rg) || terraform workspace new $(rg)
           terraform init
           terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
         workingDirectory: '$(agent.builddirectory)/s'
