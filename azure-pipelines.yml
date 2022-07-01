@@ -53,7 +53,6 @@ stages:
     - task: CmdLine@2
       inputs:
         script: |
-          az login --service-principal -u $(client_id) -p $(secret) --tenant $(tenant)
           export ARM_CLIENT_ID=$(client_id)
           export ARM_CLIENT_SECRET=$(secret)
           export ARM_TENANT_ID=$(tenant)
@@ -67,6 +66,7 @@ stages:
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: 'export az credentials'
       
+    
     # - task: CmdLine@2
     #   inputs:
     #     script: |
