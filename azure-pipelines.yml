@@ -31,6 +31,7 @@ stages:
     
 - stage: staging_init_and_plan
   variables:
+  - group: staging_vars
   - group: azure_credentials
   # dependsOn: install
   displayName: terraform init and plan
@@ -47,8 +48,12 @@ stages:
           export ARM_CLIENT_SECRET=$(secret)
           export ARM_TENANT_ID=$(tenant)
           export ARM_SUBSCRIPTION_ID=$(subscription_id)
-          echo $(client_id)
           echo $ARM_CLIENT_ID
+          echo $ARM_CLIENT_SECRET
+          echo $ARM_TENANT_ID
+          echo $ARM_SUBSCRIPTION_ID
+          terraform init
+          terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: 'export az credentials'
       
@@ -58,7 +63,7 @@ stages:
     #       terraform init
     #       terraform workspace select staging || terraform workspace new staging
     #       terraform init
-    #       terraform plan -out=plan.file -var 'environment=$rg' -var 'vmss_admin_username=$user' -var 'vmss_admin_password=$pass'
+    #       terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
     #     workingDirectory: '$(agent.builddirectory)/s'
     #   displayName: 'echo az credentials'
 
