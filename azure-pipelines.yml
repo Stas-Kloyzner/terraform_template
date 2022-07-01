@@ -14,8 +14,8 @@ stages:
   jobs:
   - job: infracost
     displayName: Run Infracost
-    pool:
-      vmImage: ubuntu-latest
+    # pool:
+    #   vmImage: ubuntu-latest
 
     steps:
 
