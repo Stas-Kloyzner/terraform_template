@@ -29,14 +29,14 @@ stages:
           sudo apt-get update && sudo apt-get install terraform
       displayName: 'install terraform'
     
-- stage: staging init and plan
+- stage: staging_init_and_plan
   variables:
   - group: staging_vars
   dependsOn: install
   displayName: terraform init and plan
   
   jobs:
-  - job: init-plan
+  - job: init_and_plan
     displayName: terraform terraform init and plan
 
     steps:
