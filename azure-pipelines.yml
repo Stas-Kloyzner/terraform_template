@@ -71,7 +71,6 @@ stages:
           terraform init
           terraform workspace select $(rg) || terraform workspace new $(rg)
           terraform init
-          mkdir '$(rg)_plan'
           terraform plan -out=$(rg)_plan -var 'environment=$(rg)' -var 'vmss_admin_username=$(vmss_admin)' -var 'vmss_admin_password=$(vmss_pass)' -var 'vmss_instances=$(vmss_instances)'
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: production_init_and_plan
