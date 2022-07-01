@@ -47,6 +47,7 @@ stages:
           export ARM_SUBSCRIPTION_ID=$(subscription_id)
           terraform workspace select $(rg) || terraform workspace new $(rg)
           terraform init
+          mkdir '$(rg)_plan'
           terraform plan -out=$(rg)/plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: staging_init_and_plan
@@ -69,6 +70,7 @@ stages:
           export ARM_SUBSCRIPTION_ID=$(subscription_id)
           terraform workspace select $(rg) || terraform workspace new $(rg)
           terraform init
+          mkdir '$(rg)_plan'
           terraform plan -out=$(rg)/plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: production_init_and_plan
