@@ -48,39 +48,40 @@ stages:
           terraform init
           terraform workspace select $(rg) || terraform workspace new $(rg)
           terraform init
-          terraform plan -out=$(rg)_plan -var 'environment=$(rg)' -var 'vmss_admin_username=$(vmss_admin)' -var 'vmss_admin_password=$(vmss_pass)'
+          terraform plan -out=$(rg)_plan -var 'environment=$(rg)' -var 'vmss_admin_username=$(vmss_admin)' -var 'vmss_admin_password=$(vmss_pass) -var 'vmss_instances=$(vmss_instances)'
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: staging_init_and_plan
       
-  # - job: production_init_and_plan
-  #   variables:
-  #   - group: production_vars
-  #   - group: azure_credentials
-  #   dependsOn: staging_init_and_plan
-  #   displayName: production_init_and_plan
+  - job: production_init_and_plan
+    variables:
+    - group: production_vars
+    - group: azure_credentials
+    dependsOn: staging_init_and_plan
+    displayName: production_init_and_plan
 
-  #   steps:
-  #   - checkout: none
-  #   - task: CmdLine@2
-  #     inputs:
-  #       script: |
-  #         export ARM_CLIENT_ID=$(client_id)
-  #         export ARM_CLIENT_SECRET=$(secret)
-  #         export ARM_TENANT_ID=$(tenant)
-  #         export ARM_SUBSCRIPTION_ID=$(subscription_id)
-  #         terraform workspace select $(rg) || terraform workspace new $(rg)
-  #         terraform init
-  #         mkdir '$(rg)_plan'
-  #         terraform plan -out=$(rg)_plan -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
-  #       workingDirectory: '$(agent.builddirectory)/s'
-  #     displayName: production_init_and_plan
+    steps:
+    - checkout: none
+    - task: CmdLine@2
+      inputs:
+        script: |
+          export ARM_CLIENT_ID=$(client_id)
+          export ARM_CLIENT_SECRET=$(secret)
+          export ARM_TENANT_ID=$(tenant)
+          export ARM_SUBSCRIPTION_ID=$(subscription_id)
+          terraform init
+          terraform workspace select $(rg) || terraform workspace new $(rg)
+          terraform init
+          mkdir '$(rg)_plan'
+          terraform plan -out=$(rg)_plan -var 'environment=$(rg)' -var 'vmss_admin_username=$(vmss_admin)' -var 'vmss_admin_password=$(vmss_pass) -var 'vmss_instances=$(vmss_instances)'
+        workingDirectory: '$(agent.builddirectory)/s'
+      displayName: production_init_and_plan
 
-  # - job: package_and_export_artifct
-  #   dependsOn: production_init_and_plan
-  #   displayName: package_and_export_artifct
+  - job: package_and_export_artifct
+    dependsOn: production_init_and_plan
+    displayName: package_and_export_artifct
   
-  #   steps:
-  #   - checkout: none
+    steps:
+    - checkout: none
     - task: CmdLine@2
       inputs:
         script: 'sudo apt-get -y install zip'
