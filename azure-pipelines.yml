@@ -6,28 +6,28 @@ pool:
   name: w7pool
 
 stages:
-- stage: install
-  displayName: install terraform
+# - stage: install
+#   displayName: install terraform
   
-  jobs:
-  - job: install
-    displayName: install terraform and prerequisites
+#   jobs:
+#   - job: install
+#     displayName: install terraform and prerequisites
 
-    steps:
+#     steps:
     
-    - task: CmdLine@2
-      inputs:
-        script: |
-          sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
-      displayName: 'update system and get gnupg and curl packages'
+#     - task: CmdLine@2
+#       inputs:
+#         script: |
+#           sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+#       displayName: 'update system and get gnupg and curl packages'
 
-    - task: CmdLine@2
-      inputs:
-        script: |
-          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-          sudo apt-get update && sudo apt-get install terraform
-      displayName: 'install terraform'
+#     - task: CmdLine@2
+#       inputs:
+#         script: |
+#           curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+#           sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+#           sudo apt-get update && sudo apt-get install terraform
+#       displayName: 'install terraform'
     
 - stage: staging_init_and_plan
   variables:
@@ -49,10 +49,9 @@ stages:
           export ARM_TENANT_ID=$(tenant)
           export ARM_SUBSCRIPTION_ID=$(subscription_id)
           terraform init
-          terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
           terraform workspace select staging || terraform workspace new staging
           terraform init
-          terraform plan -out=plan.file -var 'environment=$rg' -var 'vmss_admin_username=$user' -var 'vmss_admin_password=$pass'
+          terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: staging_init_and_plan
       
@@ -76,10 +75,9 @@ stages:
           export ARM_TENANT_ID=$(tenant)
           export ARM_SUBSCRIPTION_ID=$(subscription_id)
           terraform init
-          terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
           terraform workspace select staging || terraform workspace new staging
           terraform init
-          terraform plan -out=plan.file -var 'environment=$rg' -var 'vmss_admin_username=$user' -var 'vmss_admin_password=$pass'
+          terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: production_init_and_plan
     
