@@ -11,40 +11,51 @@ stages:
   
   jobs:
   - job: install
-    displayName: install terraform
+    displayName: install terraform and prerequisites
 
     steps:
-    # - task: CmdLine@2
-    #   inputs:
-    #     script: 'sudo apt-get -y install zip'
-    #   displayName: 'install zip'
     
     - task: CmdLine@2
       inputs:
         script: |
           sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+      displayName: 'update system and get gnupg and curl packages'
+
+    - task: CmdLine@2
+      inputs:
+        script: |
           curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
           sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
           sudo apt-get update && sudo apt-get install terraform
       displayName: 'install terraform'
-
-    # - task: TerraformInstaller@0
-    #   inputs:
-    #     terraformVersion: 'latest'
-    #   displayName: install terraform
     
-    # - task: AzureCLI@2
-    #   displayName: Azure CLI terraform staging
-    #   inputs:
-    #     azureSubscription: azure_pass
-    #     scriptType: bash
-    #     scriptLocation: inlineScript
-    #     inlineScript: |
-    #       terraform workspace select staging || terraform workspace new staging
-    #       terraform init
-    #       terraform plan -out=plan.file -var 'environment=<value>' -var '<input-variable-name>=<value>' -var '<input-variable-name>=<value>'
-    #     workingDirectory: '$(agent.builddirectory)/s'
+- stage: staging init and plan
+  variables:
+  - group: staging_vars
+  dependsOn: install
+  displayName: terraform init and plan
+  
+  jobs:
+  - job: init-plan
+    displayName: terraform terraform init and plan
 
+    steps:
+    - task: AzureCLI@2
+      displayName: Azure CLI terraform staging
+      inputs:
+        azureSubscription: azure_pass
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          terraform workspace select staging || terraform workspace new staging
+          terraform init
+          terraform plan -out=plan.file -var 'environment=$rg' -var 'vmss_admin_username=$user' -var 'vmss_admin_password=$pass'
+        workingDirectory: '$(agent.builddirectory)/s'
+      
+    # - task: CmdLine@2
+    #   inputs:
+    #     script: 'sudo apt-get -y install zip'
+    #   displayName: 'install zip'
 
     # - task: ArchiveFiles@2
     #   inputs:
