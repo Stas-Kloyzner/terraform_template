@@ -41,15 +41,14 @@ stages:
     displayName: terraform terraform init and plan
 
     steps:
-    # - task: CmdLine@2
-    #   inputs:
-    #     script: |
-    #       export ARM_CLIENT_ID=$(client_id)
-    #       export ARM_CLIENT_SECRET=$(secret)
-    #       export ARM_TENANT_ID=$(tenant)
-    #       export ARM_SUBSCRIPTION_ID=$(subscription_id)
-    #     workingDirectory: '$(agent.builddirectory)/s'
-    #   displayName: 'export az credentials'
+    - task: CmdLine@2
+      inputs:
+        script: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          az login --service-principal -u $(client_id) -p $(secret) --tenant $(tenant)
+
+        workingDirectory: '$(agent.builddirectory)/s'
+      displayName: 'export az credentials'
       
     # - task: CmdLine@2
     #   inputs:
@@ -70,6 +69,7 @@ stages:
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
+        
           az login -u $(login) -p $(password)
         workingDirectory: '$(agent.builddirectory)/s'
       
