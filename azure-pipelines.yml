@@ -48,16 +48,20 @@ stages:
           export ARM_CLIENT_SECRET=$secret
           export ARM_TENANT_ID=$tenant
           export ARM_SUBSCRIPTION_ID=$subscription_id
-      displayName: 'export az credentials'
-      
-    - task: CmdLine@2
-      inputs:
-        script: |
           echo $ARM_CLIENT_ID
           echo $ARM_CLIENT_SECRET
           echo $ARM_TENANT
           echo $ARM_SUBSCRIPTION_ID
-      displayName: 'echo az credentials'
+      displayName: 'export az credentials'
+      
+    # - task: CmdLine@2
+    #   inputs:
+    #     script: |
+    #       echo $ARM_CLIENT_ID
+    #       echo $ARM_CLIENT_SECRET
+    #       echo $ARM_TENANT
+    #       echo $ARM_SUBSCRIPTION_ID
+    #   displayName: 'echo az credentials'
 
     # - task: AzureCLI@2
     #   displayName: Azure CLI terraform staging
