@@ -14,25 +14,26 @@ stages:
 #     displayName: install terraform and prerequisites
 
 #     steps:
+    
+    # - task: CmdLine@2
+    #   inputs:
+    #     script: |
+    #       sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+    #   displayName: 'update system and get gnupg and curl packages'
 
-#     - task: CmdLine@2
-#       inputs:
-#         script: |
-#           sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
-#       displayName: 'update system and get gnupg and curl packages'
-
-#     - task: CmdLine@2
-#       inputs:
-#         script: |
-#           curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-#           sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-#           sudo apt-get update && sudo apt-get install terraform
-#       displayName: 'install terraform'
+    # - task: CmdLine@2
+    #   inputs:
+    #     script: |
+    #       curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+    #       sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+    #       sudo apt-get update && sudo apt-get install terraform
+    #   displayName: 'install terraform'
     
 - stage: staging_init_and_plan
   variables:
   - group: staging_vars
-  # dependsOn: install
+  - group: azure_credentials
+  dependsOn: install
   displayName: terraform init and plan
   
   jobs:
@@ -40,18 +41,35 @@ stages:
     displayName: terraform terraform init and plan
 
     steps:
-    - task: AzureCLI@2
-      displayName: Azure CLI terraform staging
+    - task: CmdLine@2
       inputs:
-        azureSubscription: azure_pass
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          terraform init
-          terraform workspace select staging || terraform workspace new staging
-          terraform init
-          terraform plan -out=plan.file -var 'environment=$rg' -var 'vmss_admin_username=$user' -var 'vmss_admin_password=$pass'
-        workingDirectory: '$(agent.builddirectory)/s'
+        script: |
+          export ARM_CLIENT_ID=$client_id
+          export ARM_CLIENT_SECRET=$secret
+          export ARM_TENANT_ID=$tenant
+          export ARM_SUBSCRIPTION_ID=$subscription_id
+      displayName: 'export az credentials'
+      
+    - task: CmdLine@2
+      inputs:
+        script: |
+          echo $ARM_CLIENT_ID
+          echo $ARM_CLIENT_SECRET
+          echo $ARM_TENANT
+          echo $ARM_SUBSCRIPTION_ID
+      displayName: 'echo az credentials'
+
+    # - task: AzureCLI@2
+    #   displayName: Azure CLI terraform staging
+    #   inputs:
+    #     azureSubscription: azure_pass
+    #     scriptType: bash
+    #     scriptLocation: inlineScript
+    #     inlineScript: |
+    #       terraform workspace select staging || terraform workspace new staging
+    #       terraform init
+    #       terraform plan -out=plan.file -var 'environment=$rg' -var 'vmss_admin_username=$user' -var 'vmss_admin_password=$pass'
+    #     workingDirectory: '$(agent.builddirectory)/s'
       
     # - task: CmdLine@2
     #   inputs:
