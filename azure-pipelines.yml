@@ -13,21 +13,21 @@ stages:
   - job: install
     displayName: install terraform and prerequisites
 
-    steps:
+    # steps:
     
-    - task: CmdLine@2
-      inputs:
-        script: |
-          sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
-      displayName: 'update system and get gnupg and curl packages'
+    # - task: CmdLine@2
+    #   inputs:
+    #     script: |
+    #       sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+    #   displayName: 'update system and get gnupg and curl packages'
 
-    - task: CmdLine@2
-      inputs:
-        script: |
-          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-          sudo apt-get update && sudo apt-get install terraform
-      displayName: 'install terraform'
+    # - task: CmdLine@2
+    #   inputs:
+    #     script: |
+    #       curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+    #       sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+    #       sudo apt-get update && sudo apt-get install terraform
+    #   displayName: 'install terraform'
 
   - job: staging_init_and_plan
     variables:
@@ -48,7 +48,7 @@ stages:
           terraform init
           terraform workspace select $(rg) || terraform workspace new $(rg)
           terraform init
-          terraform plan -out=$(rg)_plan -var 'environment=$(rg)' -var 'vmss_admin_username=$(vmss_admin)' -var 'vmss_admin_password=$(vmss_pass) -var 'vmss_instances=$(vmss_instances)'
+          terraform plan -out=$(rg)_plan -var 'environment=$(rg)' -var 'vmss_admin_username=$(vmss_admin)' -var 'vmss_admin_password=$(vmss_pass)' -var 'vmss_instances=$(vmss_instances)'
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: staging_init_and_plan
       
@@ -72,7 +72,7 @@ stages:
           terraform workspace select $(rg) || terraform workspace new $(rg)
           terraform init
           mkdir '$(rg)_plan'
-          terraform plan -out=$(rg)_plan -var 'environment=$(rg)' -var 'vmss_admin_username=$(vmss_admin)' -var 'vmss_admin_password=$(vmss_pass) -var 'vmss_instances=$(vmss_instances)'
+          terraform plan -out=$(rg)_plan -var 'environment=$(rg)' -var 'vmss_admin_username=$(vmss_admin)' -var 'vmss_admin_password=$(vmss_pass)' -var 'vmss_instances=$(vmss_instances)'
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: production_init_and_plan
 
