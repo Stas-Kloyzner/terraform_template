@@ -29,19 +29,22 @@ stages:
 #           sudo apt-get update && sudo apt-get install terraform
 #       displayName: 'install terraform'
     
-- stage: staging_init_and_plan
-  variables:
-  - group: staging_vars
-  - group: azure_credentials
+- stage: Terraform_CI
   dependsOn: install
-  displayName: staging_init_and_plan
+  displayName: Terraform_CI
   
   jobs:
   - job: staging_init_and_plan
+    variables:
+    - group: staging_vars
+    - group: azure_credentials
     displayName: staging_init_and_plan
 
     steps:
     - task: CmdLine@2
+      variables:
+      - group: staging_vars
+      - group: azure_credentials
       inputs:
         script: |
           export ARM_CLIENT_ID=$(client_id)
@@ -54,15 +57,10 @@ stages:
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: staging_init_and_plan
       
-- stage: production_init_and_plan
-  variables:
-  - group: production_vars
-  - group: azure_credentials
-  dependsOn: staging_init_and_plan
-  displayName: production_init_and_plan
-  
-  jobs:
   - job: production_init_and_plan
+    variables:
+    - group: production_vars
+    - group: azure_credentials
     displayName: production_init_and_plan
 
     steps:
@@ -78,12 +76,7 @@ stages:
           terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: production_init_and_plan
-    
-- stage: package_and_export_artifct
-  dependsOn: production_init_and_plan
-  displayName: package_and_export_artifct
-  
-  jobs:
+
   - job: package_and_export_artifct
     displayName: package_and_export_artifct
   
