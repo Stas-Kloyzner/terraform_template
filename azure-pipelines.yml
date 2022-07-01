@@ -41,15 +41,6 @@ stages:
     displayName: terraform terraform init and plan
 
     steps:
-    # - task: CmdLine@2
-    #   inputs:
-    #     script: |
-    #       export ARM_CLIENT_ID=$(client_id)
-    #       export ARM_CLIENT_SECRET=$(secret)
-    #       export ARM_TENANT_ID=$(tenant)
-    #       export ARM_SUBSCRIPTION_ID=$(subscription_id)
-    #     workingDirectory: '$(agent.builddirectory)/s'
-    #   displayName: 'export az credentials'
     - task: CmdLine@2
       inputs:
         script: |
@@ -57,12 +48,13 @@ stages:
           export ARM_CLIENT_SECRET=$(secret)
           export ARM_TENANT_ID=$(tenant)
           export ARM_SUBSCRIPTION_ID=$(subscription_id)
-          export AZURE_CLIENT_ID=$(client_id)
-          export AZURE_CLIENT_SECRET=$(secret)
-          export AZURE_TENANT_ID=$(tenant)
+        workingDirectory: '$(agent.builddirectory)/s'
+      displayName: 'export az credentials'
+    - task: CmdLine@2
+      inputs:
+        script: |
           terraform init
           terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
-
         workingDirectory: '$(agent.builddirectory)/s'
       displayName: 'export az credentials'
       
@@ -79,16 +71,6 @@ stages:
     #     workingDirectory: '$(agent.builddirectory)/s'
     #   displayName: 'init and plan'
 
-    # - task: AzureCLI@2
-    #   displayName: Azure CLI terraform staging
-    #   inputs:
-    #     azureSubscription: azure_pass
-    #     scriptType: bash
-    #     scriptLocation: inlineScript
-    #     inlineScript: |
-        
-    #       az login -u $(login) -p $(password)
-    #     workingDirectory: '$(agent.builddirectory)/s'
       
     # - task: CmdLine@2
     #   inputs:
