@@ -10,7 +10,7 @@ pool:
   name: w7pool
 
 stages:
-- stage: install
+- stage: install ,init ,plan
   displayName: install terraform
   
   jobs:
