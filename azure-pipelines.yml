@@ -6,39 +6,39 @@ pool:
   name: w7pool
 
 stages:
-# - stage: install
-#   displayName: install terraform
+- stage: install
+  displayName: install terraform
   
-#   jobs:
-#   - job: install
-#     displayName: install terraform and prerequisites
+  jobs:
+  - job: install
+    displayName: install terraform and prerequisites
 
-#     steps:
+    steps:
     
-    # - task: CmdLine@2
-    #   inputs:
-    #     script: |
-    #       sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
-    #   displayName: 'update system and get gnupg and curl packages'
+    - task: CmdLine@2
+      inputs:
+        script: |
+          sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+      displayName: 'update system and get gnupg and curl packages'
 
-    # - task: CmdLine@2
-    #   inputs:
-    #     script: |
-    #       curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-    #       sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-    #       sudo apt-get update && sudo apt-get install terraform
-    #   displayName: 'install terraform'
+    - task: CmdLine@2
+      inputs:
+        script: |
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install terraform
+      displayName: 'install terraform'
     
 - stage: staging_init_and_plan
   variables:
   - group: staging_vars
   - group: azure_credentials
-  # dependsOn: install
-  displayName: terraform init and plan
+  dependsOn: install
+  displayName: staging_init_and_plan
   
   jobs:
-  - job: init_and_plan
-    displayName: terraform terraform init and plan
+  - job: staging_init_and_plan
+    displayName: staging_init_and_plan
 
     steps:
     - task: CmdLine@2
@@ -50,46 +50,63 @@ stages:
           export ARM_SUBSCRIPTION_ID=$(subscription_id)
           terraform init
           terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
+          terraform workspace select staging || terraform workspace new staging
+          terraform init
+          terraform plan -out=plan.file -var 'environment=$rg' -var 'vmss_admin_username=$user' -var 'vmss_admin_password=$pass'
         workingDirectory: '$(agent.builddirectory)/s'
-      displayName: 'export az credentials'
+      displayName: staging_init_and_plan
+      
+- stage: production_init_and_plan
+  variables:
+  - group: production_vars
+  - group: azure_credentials
+  dependsOn: staging_init_and_plan
+  displayName: production_init_and_plan
+  
+  jobs:
+  - job: production_init_and_plan
+    displayName: production_init_and_plan
+
+    steps:
     - task: CmdLine@2
       inputs:
         script: |
+          export ARM_CLIENT_ID=$(client_id)
+          export ARM_CLIENT_SECRET=$(secret)
+          export ARM_TENANT_ID=$(tenant)
+          export ARM_SUBSCRIPTION_ID=$(subscription_id)
           terraform init
           terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
+          terraform workspace select staging || terraform workspace new staging
+          terraform init
+          terraform plan -out=plan.file -var 'environment=$rg' -var 'vmss_admin_username=$user' -var 'vmss_admin_password=$pass'
         workingDirectory: '$(agent.builddirectory)/s'
-      displayName: 'no export az credentials'
-      
+      displayName: production_init_and_plan
     
-    # - task: CmdLine@2
-    #   inputs:
-    #     script: |
-    #       az login -u $(login) -p $(password)
-    #       terraform init
-    #       terraform plan -out=plan.file -var 'environment=$(rg)' -var 'vmss_admin_username=$(user)' -var 'vmss_admin_password=$(pass)'
-              # terraform workspace select staging || terraform workspace new staging
-          # terraform init
-          # terraform plan -out=plan.file -var 'environment=$rg' -var 'vmss_admin_username=$user' -var 'vmss_admin_password=$pass'
-    #     workingDirectory: '$(agent.builddirectory)/s'
-    #   displayName: 'init and plan'
+- stage: package_and_export_artifct
+  dependsOn: production_init_and_plan
+  displayName: package_and_export_artifct
+  
+  jobs:
+  - job: package_and_export_artifct
+    displayName: package_and_export_artifct
+  
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: 'sudo apt-get -y install zip'
+      displayName: 'install zip'
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(agent.builddirectory)/s'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(agent.builddirectory)/a/terraform.zip'
+        replaceExistingArchive: true
+        verbose: true
 
-      
-    # - task: CmdLine@2
-    #   inputs:
-    #     script: 'sudo apt-get -y install zip'
-    #   displayName: 'install zip'
-
-    # - task: ArchiveFiles@2
-    #   inputs:
-    #     rootFolderOrFile: '$(agent.builddirectory)/s'
-    #     includeRootFolder: false
-    #     archiveType: 'zip'
-    #     archiveFile: '$(agent.builddirectory)/a/terraform.zip'
-    #     replaceExistingArchive: true
-    #     verbose: true
-
-    # - task: PublishBuildArtifacts@1
-    #   inputs:
-    #     PathtoPublish: '$(agent.builddirectory)/a'
-    #     ArtifactName: 'terraform'
-    #     publishLocation: 'Container'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(agent.builddirectory)/a'
+        ArtifactName: 'terraform'
+        publishLocation: 'Container'
