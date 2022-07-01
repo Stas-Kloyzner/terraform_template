@@ -18,69 +18,49 @@ stages:
     displayName: install terraform
 
     steps:
-    - task: TerraformInstaller@0
-      inputs:
-        terraformVersion: 'latest'
-      displayName: install terraform
-    
-    # - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
-    #   displayName: 'Terraform backend'
-    #   inputs:
-    #     backendServiceArm: 'Azure Pass — спонсорское предложение (652d0bc1-0a52-4208-aba4-081164348a87)'
-    #     backendAzureRmResourceGroupName: storage
-    #     backendAzureRmStorageAccountName: w7tfstate
-    #     backendAzureRmContainerName: tfstate
-    #     backendAzureRmKey: tf/terraform.tfstate
-
-    - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
-      displayName: 'terraform init'
-      inputs:
-        command: init
-        allowTelemetryCollection: false
-
-    
-  
-#staging
-    - task: CmdLine@2
-      inputs:
-        script: 'terraform workspace select staging || terraform workspace new staging'
-      # continueOnError: true
-    
     # - task: CmdLine@2
     #   inputs:
-    #     script: 'terraform workspace select staging'
-    #   continueOnError: true
-    - task: CmdLine@2
-      inputs:
-        script: 'terraform plan -var environment=staging'
-
-      
-# production
-    - task: CmdLine@2
-      inputs:
-        script: 'terraform workspace select production || terraform workspace new production'
-      # continueOnError: true
+    #     script: 'sudo apt-get -y install zip'
+    #   displayName: 'install zip'
     
-    # - task: CmdLine@2
+    - task: CmdLine@2
+      inputs:
+        script: |
+          sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install terraform
+      displayName: 'install terraform'
+
+    # - task: TerraformInstaller@0
     #   inputs:
-    #     script: 'terraform workspace select production'
-    #   continueOnError: true
-
-    - task: CmdLine@2
-      inputs:
-        script: 'terraform plan -var environment=production'
-        
-      
+    #     terraformVersion: 'latest'
+    #   displayName: install terraform
     
-  
-#publishing
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Pipeline.Workspace)/s'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
+    # - task: AzureCLI@2
+    #   displayName: Azure CLI terraform staging
+    #   inputs:
+    #     azureSubscription: azure_pass
+    #     scriptType: bash
+    #     scriptLocation: inlineScript
+    #     inlineScript: |
+    #       terraform workspace select staging || terraform workspace new staging
+    #       terraform init
+    #       terraform plan -out=plan.file -var 'environment=<value>' -var '<input-variable-name>=<value>' -var '<input-variable-name>=<value>'
+    #     workingDirectory: '$(agent.builddirectory)/s'
 
-# - script: |
-#     echo Add other tasks to build, test, and deploy your project.
-#     echo See https://aka.ms/yaml
-#   displayName: 'Run a multi-line script'
+
+    # - task: ArchiveFiles@2
+    #   inputs:
+    #     rootFolderOrFile: '$(agent.builddirectory)/s'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(agent.builddirectory)/a/terraform.zip'
+    #     replaceExistingArchive: true
+    #     verbose: true
+
+    # - task: PublishBuildArtifacts@1
+    #   inputs:
+    #     PathtoPublish: '$(agent.builddirectory)/a'
+    #     ArtifactName: 'terraform'
+    #     publishLocation: 'Container'
