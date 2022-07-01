@@ -42,9 +42,6 @@ stages:
 
     steps:
     - task: CmdLine@2
-      variables:
-      - group: staging_vars
-      - group: azure_credentials
       inputs:
         script: |
           export ARM_CLIENT_ID=$(client_id)
