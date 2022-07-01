@@ -9,9 +9,9 @@ stages:
 - stage: install
   displayName: install terraform
   
-#   jobs:
-#   - job: install
-#     displayName: install terraform and prerequisites
+  jobs:
+  - job: install
+    displayName: install terraform and prerequisites
 
 #     steps:
     
