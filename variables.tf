@@ -39,7 +39,7 @@ variable "db_zone" {
 variable "storage_mb" {
   type        = number
   description = "pg flexible server storage size in mb"
-  default     = 64000
+  default     = 32768
 }
 
 #linux-vmss variables
