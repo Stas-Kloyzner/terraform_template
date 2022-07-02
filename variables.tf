@@ -34,7 +34,7 @@ variable "db_administrator_password" {
 }
 variable "db_zone" {
   description = "db zone"
-  default     =  1
+  default     =  3
 }
 variable "storage_mb" {
   type        = number
