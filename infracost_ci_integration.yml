@@ -46,6 +46,7 @@ jobs:
 
       # Clone the base branch of the pull request (e.g. main/master) into a temp directory.
       - bash: |
+          sudo rm -r /tmp/base
           branch=$(System.PullRequest.TargetBranch)
           branch=${branch#refs/heads/}
           git clone $(Build.Repository.Uri) --branch=${branch} --single-branch /tmp/base
