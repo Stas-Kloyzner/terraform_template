@@ -2,7 +2,7 @@
 # Running on pull requests to `master` (or your default branch) is a good default.
 pr:
   branches:
-    exclude:
+    include:
       - main
 pool:
   name: w7pool
