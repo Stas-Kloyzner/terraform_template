@@ -1,8 +1,8 @@
 
 
 
-trigger:
-- main
+pr:
+  - main
 
 pool:
   name: w7pool
