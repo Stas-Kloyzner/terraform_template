@@ -2,7 +2,11 @@
 
 
 trigger:
-  - main
+  branches:
+    include:
+    - main
+    exclude:
+    - infra
 
 pool:
   name: w7pool
