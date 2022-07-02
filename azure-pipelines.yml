@@ -1,7 +1,7 @@
 
 
 
-pr:
+trigger:
   - main
 
 pool:
