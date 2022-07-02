@@ -48,7 +48,7 @@
 | <a name="input_vmss_instances"></a> [vmss\_instances](#input\_vmss\_instances) | default number of vmss machines | `number` | `1` | no |
 | <a name="input_vnet_address_space"></a> [vnet\_address\_space](#input\_vnet\_address\_space) | vnet address space | `string` | `"10.0.0.0"` | no |
 
-## Outputs
+## Outputs1
 
 No outputs.
 <!-- END_TF_DOCS -->
