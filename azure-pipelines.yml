@@ -7,6 +7,9 @@ trigger:
     - main
     exclude:
     - infra
+  paths:
+    exclude:
+    - docs/README.md
 
 pool:
   name: w7pool
