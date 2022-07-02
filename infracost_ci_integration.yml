@@ -16,8 +16,6 @@ variables:
 jobs:
   - job: infracost
     displayName: Run Infracost
-    pool: 
-      vmImage: ubuntu-latest
 
     steps:
      # If you use private modules, add a base 64 encoded secret
