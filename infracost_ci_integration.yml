@@ -2,15 +2,13 @@
 # Running on pull requests to `master` (or your default branch) is a good default.
 pr:
   branches:
-    include:
-    - infra
     exclude:
     - main
   paths:
     exclude:
-    - README.md
-    - infracost_ci_integration.yml
-    - azure-pipelines.yml
+    - ./README.md
+    - ./infracost_ci_integration.yml
+    - ./azure-pipelines.yml
 pool:
   name: w7pool
 variables:
