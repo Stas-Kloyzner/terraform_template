@@ -1,8 +1,14 @@
 # The Azure Pipelines docs (https://docs.microsoft.com/en-us/azure/devops/pipelines/process/tasks) describe other options.
 # Running on pull requests to `master` (or your default branch) is a good default.
 pr:
-  - main
-
+  branches:
+    include:
+    - infra
+    exclude:
+    - main
+  paths:
+    exclude:
+    - docs/README.md
 pool:
   name: w7pool
 variables:
