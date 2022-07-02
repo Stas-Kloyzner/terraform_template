@@ -56,7 +56,7 @@ variable "vmss_admin_password" {
 variable "vmss_instances" {
   description = "default number of vmss machines"
   type        = number
-  default     = 1
+  default     = 3
 }
 
 variable "machine_type" {
