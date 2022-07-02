@@ -9,7 +9,9 @@ trigger:
     - infra
   paths:
     exclude:
-    - docs/README.md
+    - README.md
+    - infracost_ci_integration.yml
+    - azure-pipelines.yml
 
 pool:
   name: w7pool
