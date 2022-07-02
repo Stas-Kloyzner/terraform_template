@@ -3,6 +3,8 @@
 pr:
   - main
 
+pool:
+  name: w7pool
 variables:
   - name: TF_ROOT
     value: ./ # Update this!
@@ -14,7 +16,7 @@ variables:
 jobs:
   - job: infracost
     displayName: Run Infracost
-    pool:
+    pool: 
       vmImage: ubuntu-latest
 
     steps:
