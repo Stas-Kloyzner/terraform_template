@@ -4,12 +4,14 @@
 trigger:
   branches:
     include:
-    - main
+      - main
+    exclude:
+      - "*"
   paths:
     exclude:
-    - Stas-Kloyzner/terraform_template/README.md
-    - Stas-Kloyzner/terraform_template/infracost_ci_integration.yml
-    - Stas-Kloyzner/terraform_template/azure-pipelines.yml
+      - Stas-Kloyzner/terraform_template/README.md
+      - Stas-Kloyzner/terraform_template/infracost_ci_integration.yml
+      - Stas-Kloyzner/terraform_template/azure-pipelines.yml
 
 pool:
   name: w7pool
