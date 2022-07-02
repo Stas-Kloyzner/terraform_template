@@ -7,9 +7,9 @@ trigger:
     - main
   paths:
     exclude:
-    - ./README.md
-    - ./infracost_ci_integration.yml
-    - ./azure-pipelines.yml
+    - Stas-Kloyzner/terraform_template/README.md
+    - Stas-Kloyzner/terraform_template/infracost_ci_integration.yml
+    - Stas-Kloyzner/terraform_template/azure-pipelines.yml
 
 pool:
   name: w7pool
