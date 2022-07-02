@@ -5,13 +5,11 @@ trigger:
   branches:
     include:
     - main
-    exclude:
-    - infra
   paths:
     exclude:
-    - README.md
-    - infracost_ci_integration.yml
-    - azure-pipelines.yml
+    - ./README.md
+    - ./infracost_ci_integration.yml
+    - ./azure-pipelines.yml
 
 pool:
   name: w7pool
