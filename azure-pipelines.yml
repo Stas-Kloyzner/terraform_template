@@ -12,64 +12,25 @@ stages:
   displayName: Terraform_CI
   
   jobs:
-  - job: infracost
-    displayName: Run Infracost
-    # pool:
-    #   vmImage: ubuntu-latest
 
-    steps:
-
-      - task: InfracostSetup@1
-        displayName: Setup Infracost
-        inputs:
-          apiKey: $(infracostApiKey)
-
-      - bash: |
-          branch=$(System.PullRequest.TargetBranch)
-          branch=${branch#refs/heads/}
-          git clone $(Build.Repository.Uri) --branch=${branch} --single-branch /tmp/base
-        displayName: Checkout base branch
-
-
-      # Generate an Infracost cost estimate baseline from the comparison branch, so that Infracost can compare the cost difference.
-      - bash: |
-          infracost breakdown --path=$(TF_ROOT) \
-                              --format=json \
-                              --out-file=/tmp/infracost-base.json
-        displayName: Generate Infracost cost estimate baseline
-
-      - bash: |
-          infracost diff --path=$(TF_ROOT) \
-                         --format=json \
-                         --compare-to=/tmp/infracost-base.json \
-                         --out-file=/tmp/infracost.json
-        displayName: Generate Infracost diff
-
-      - bash: |
-          infracost comment github --path=/tmp/infracost.json \
-                                   --github-token=$(githubToken) \
-                                   --pull-request=$(System.PullRequest.PullRequestNumber) \
-                                   --repo=$(Build.Repository.Name) \
-                                   --behavior=update
-        displayName: Post Infracost comment
   - job: install
     displayName: install terraform and prerequisites
 
-    # steps:
+    steps:
     
-    # - task: CmdLine@2
-    #   inputs:
-    #     script: |
-    #       sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
-    #   displayName: 'update system and get gnupg and curl packages'
+    - task: CmdLine@2
+      inputs:
+        script: |
+          sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+      displayName: 'update system and get gnupg and curl packages'
 
-    # - task: CmdLine@2
-    #   inputs:
-    #     script: |
-    #       curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-    #       sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-    #       sudo apt-get update && sudo apt-get install terraform
-    #   displayName: 'install terraform'
+    - task: CmdLine@2
+      inputs:
+        script: |
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install terraform
+      displayName: 'install terraform'
 
   - job: staging_init_and_plan
     variables:
