@@ -61,7 +61,7 @@ resource "azurerm_monitor_autoscale_setting" "scaling-setting" {
     capacity {
       default = azurerm_linux_virtual_machine_scale_set.scaleset.instances
       minimum = azurerm_linux_virtual_machine_scale_set.scaleset.instances
-      maximum = azurerm_linux_virtual_machine_scale_set.scaleset.instances
+      maximum = 10
     }
 
     rule {
