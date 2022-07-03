@@ -49,7 +49,7 @@ resource "azurerm_lb_nat_pool" "lb-NAT-pool" {
   name                           = "lb-nat-pool"
   protocol                       = "Tcp"
   frontend_port_start            = 22
-  frontend_port_end              = 32
+  frontend_port_end              = 24
   backend_port                   = 22
   frontend_ip_configuration_name = var.frontend_ip_configuration_name
 }
