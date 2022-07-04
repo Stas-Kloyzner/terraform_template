@@ -1,5 +1,5 @@
 <!-- BEGIN_TF_DOCS -->
-## Requirementss
+## Requirements
 
 | Name | Version |
 |------|---------|
