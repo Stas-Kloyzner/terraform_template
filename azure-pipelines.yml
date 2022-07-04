@@ -3,8 +3,6 @@
 pr:
   branches:
     include:
-      - '*'
-    exclude:
       - main
   paths:
     exclude:
