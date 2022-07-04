@@ -1,14 +1,14 @@
 
-
-pr:
-  branches:
-    include:
-      - main
-  paths:
-    exclude:
-      - README.md
-      - infracost_ci_integration.yml
-      - azure-pipelines.yml
+trigger: none
+# pr:
+#   branches:
+#     include:
+#       - main
+#   paths:
+#     exclude:
+#       - README.md
+#       - infracost_ci_integration.yml
+#       - azure-pipelines.yml
 pool:
   name: w7pool
 
@@ -20,6 +20,8 @@ variables:
 stages:
 
 - stage: Terraform_infracost
+pr:
+  - main
   displayName: Terraform_infracost
 
   jobs:
