@@ -1,13 +1,13 @@
 trigger: none
-# pr:
-#   branches:
-#     include:
-#       - main
-#   paths:
-#     exclude:
-#       - README.md
-#       - infracost_ci_integration.yml
-#       - azure-pipelines.yml
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    exclude:
+      - README.md
+      - infracost_ci_integration.yml
+      - azure-pipelines.yml
 pool:
   name: w7pool
 
