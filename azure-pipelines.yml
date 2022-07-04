@@ -2,8 +2,8 @@
 
 pr:
   branches:
-    # include:
-    #   - main
+    include:
+      - '*'
     exclude:
       - main
   paths:
