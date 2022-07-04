@@ -20,8 +20,7 @@ variables:
 stages:
 
 - stage: Terraform_infracost
-pr:
-  - main
+trigger: none
   displayName: Terraform_infracost
 
   jobs:
