@@ -18,47 +18,47 @@ variables:
     value: /tmp/ssh_agent.sock
 stages:
 
-- stage: Terraform_infracost
-  displayName: Terraform_infracost
+# - stage: Terraform_infracost
+#   displayName: Terraform_infracost
 
-  jobs:
+#   jobs:
 
-  - job: infracost
-    displayName: Run Infracost
+#   - job: infracost
+#     displayName: Run Infracost
 
-    steps:
-      - task: InfracostSetup@1
-        displayName: Setup Infracost
-        inputs:
-          apiKey: $(infracostApiKey)
+#     steps:
+#       - task: InfracostSetup@1
+#         displayName: Setup Infracost
+#         inputs:
+#           apiKey: $(infracostApiKey)
 
-      - bash: |
-          sudo rm -r /tmp/base
-          branch=$(System.PullRequest.TargetBranch)
-          branch=${branch#refs/heads/}
-          git clone $(Build.Repository.Uri) --branch=${branch} --single-branch /tmp/base
-        displayName: Checkout base branch
+#       - bash: |
+#           sudo rm -r /tmp/base
+#           branch=$(System.PullRequest.TargetBranch)
+#           branch=${branch#refs/heads/}
+#           git clone $(Build.Repository.Uri) --branch=${branch} --single-branch /tmp/base
+#         displayName: Checkout base branch
 
-      - bash: |
-          infracost breakdown --path=$(TF_ROOT) \
-                              --format=json \
-                              --out-file=/tmp/infracost-base.json
-        displayName: Generate Infracost cost estimate baseline
+#       - bash: |
+#           infracost breakdown --path=$(TF_ROOT) \
+#                               --format=json \
+#                               --out-file=/tmp/infracost-base.json
+#         displayName: Generate Infracost cost estimate baseline
 
-      - bash: |
-          infracost diff --path=$(TF_ROOT) \
-                         --format=json \
-                         --compare-to=/tmp/infracost-base.json \
-                         --out-file=/tmp/infracost.json
-        displayName: Generate Infracost diff
+#       - bash: |
+#           infracost diff --path=$(TF_ROOT) \
+#                          --format=json \
+#                          --compare-to=/tmp/infracost-base.json \
+#                          --out-file=/tmp/infracost.json
+#         displayName: Generate Infracost diff
 
-      - bash: |
-          infracost comment github --path=/tmp/infracost.json \
-                                   --github-token=$(githubToken) \
-                                   --pull-request=$(System.PullRequest.PullRequestNumber) \
-                                   --repo=$(Build.Repository.Name) \
-                                   --behavior=update
-        displayName: Post Infracost comment
+#       - bash: |
+#           infracost comment github --path=/tmp/infracost.json \
+#                                    --github-token=$(githubToken) \
+#                                    --pull-request=$(System.PullRequest.PullRequestNumber) \
+#                                    --repo=$(Build.Repository.Name) \
+#                                    --behavior=update
+#         displayName: Post Infracost comment
 
 - stage: Terraform_CI
   displayName: Terraform_CI
