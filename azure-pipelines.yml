@@ -62,7 +62,7 @@ stages:
 
 - stage: Terraform_CI
   displayName: Terraform_CI
-  dependsOn: Terraform_infracost
+  # dependsOn: Terraform_infracost
   
   jobs:
 
